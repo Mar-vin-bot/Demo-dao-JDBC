@@ -13,78 +13,87 @@ import model.entities.Department;
 import model.entities.Seller;
 
 public class SellerDaoJDBC implements SellerDao {
-	
+
 	private Connection conn;
-	
-	//injeção de dependencia
-	public SellerDaoJDBC (Connection conn) {
+
+	// injeção de dependencia
+	public SellerDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
 	@Override
 	public void insert(Seller obj) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void update(Seller obj) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteById(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public Seller findById(Integer id) {
-		PreparedStatement  st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
 			st = conn.prepareStatement(
-					"SELECT seller.*,department.Name as DepName "+
-					"FROM seller INNER JOIN department "+
-					"ON seller.DepartmentId = department.Id "+
-					"WHERE seller.Id = ? "						
-					);
-			
+					"SELECT seller.*,department.Name as DepName " + "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id " + "WHERE seller.Id = ? ");
+
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			if(rs.next()) {		//a linha 0 da tabela é vazia, dados da linha 1 em diante
-				Department dpto = new Department();	//nedd find dpto relacionado com Seller
-				dpto.setId(rs.getInt("DepartmentId")); //find dpto relacionado com Seller
-				dpto.setName(rs.getString("DepName"));
-				
-				Seller sel = new Seller();
-				sel.setId(rs.getInt("Id"));
-				sel.setName(rs.getString("Name"));
-				sel.setEmail(rs.getString("Email"));
-				sel.setBirthDate(rs.getDate("BirthDate"));
-				sel.setBaseSalay(rs.getDouble("BaseSalary"));
-				sel.setDepartment(dpto);
-				
+
+			if (rs.next()) { // a linha 0 da tabela é vazia, dados da linha 1 em diante
+
+				Department dpto = intanciateDpartament(rs);
+
+				Seller sel = instanceSeller(rs, dpto);
+
 				return sel;
-				
-				
-				
-			}else {
-				return null;	//return somente 0 sig que não há elemento na tabela com id
+
+			} else {
+				return null; // return somente 0 sig que não há elemento na tabela com id
 			}
-					
-			
-		}catch (SQLException e) {
+
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
-			//não precisa fechar a conn este pode ser usado para outros mtd
+			// não precisa fechar a conn este pode ser usado para outros mtd
 		}
+
+	}
+
+	private Seller instanceSeller(ResultSet rs, Department dpto) throws SQLException {
 		
+		Seller sel = new Seller();
 		
+		sel.setId(rs.getInt("Id"));
+		sel.setName(rs.getString("Name"));
+		sel.setEmail(rs.getString("Email"));
+		sel.setBirthDate(rs.getDate("BirthDate"));
+		sel.setBaseSalay(rs.getDouble("BaseSalary"));
+		sel.setDepartment(dpto);
+		return sel;
+	}
+
+	private Department intanciateDpartament(ResultSet rs) throws SQLException {
+		
+		Department dpto = new Department(); // nedd bring dpto relacionado com Seller
+		
+		dpto.setId(rs.getInt("DepartmentId")); // find dpto relacionado com Seller
+		dpto.setName(rs.getString("DepName"));
+		return dpto;
 	}
 
 	@Override
