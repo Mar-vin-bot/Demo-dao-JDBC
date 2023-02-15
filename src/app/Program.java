@@ -37,6 +37,13 @@ public class Program {
 		Seller newSeller = new Seller(null, "Black Alien ", "babilon@gmal.com", new Date(), 4000.0, departament);
 		sellerDao.insert(newSeller);
 		System.out.println("OK " + newSeller.getId());
+		
+		
+		System.out.println("=== 5 Teste UPDATE ");
+		sell = sellerDao.findById(1);
+		sell.setName("Cegos do Castelo ");
+		sellerDao.update(sell);
+		System.out.println("Update");
 
 	}
 
