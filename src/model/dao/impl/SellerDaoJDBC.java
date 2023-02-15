@@ -108,7 +108,7 @@ public class SellerDaoJDBC implements SellerDao {
 			int rowsAffected = st.executeUpdate();
 			
 			if(rowsAffected ==0 ) {
-				throw new DbException("Nothing lines affected, check number id ");
+				throw new DbException("No lines affected, check number id ");
 			}
 			
 			
@@ -128,7 +128,8 @@ public class SellerDaoJDBC implements SellerDao {
 		try {
 			st = conn.prepareStatement(
 					"SELECT seller.*,department.Name as DepName " + "FROM seller INNER JOIN department "
-							+ "ON seller.DepartmentId = department.Id " + "WHERE seller.Id = ? ");
+							+ "ON seller.DepartmentId = department.Id " + "WHERE seller.Id = ? "
+							);
 
 			st.setInt(1, id);
 			rs = st.executeQuery();

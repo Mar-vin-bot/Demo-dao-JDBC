@@ -31,10 +31,12 @@ public class Program {
 
 		System.out.println("=== 3 Teste FindIdAll ");
 		list = sellerDao.findAll();
+		
+		list.forEach(System.out::println);
 
-		for (Seller obj : list) {
-			System.out.println(obj);
-		}
+//		for (Seller obj : list) {
+//			System.out.println(obj);
+//		}
 		
 		System.out.println("=== 4 Teste INSERT ");
 		Seller newSeller = new Seller(null, "Black Alien ", "babilon@gmal.com", new Date(), 4000.0, departament);
@@ -54,6 +56,7 @@ public class Program {
 		sellerDao.deleteById(id);
 		System.out.println("Delete ");
 
+		sc.close();
 	}
 
 }
